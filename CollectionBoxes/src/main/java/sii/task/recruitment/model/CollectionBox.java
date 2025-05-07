@@ -1,6 +1,7 @@
 package sii.task.recruitment.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class CollectionBox {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Box identifier is mandatory.")
     @Column(nullable = false, unique = true)
     private String identifier;
 
