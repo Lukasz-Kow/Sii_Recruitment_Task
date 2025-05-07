@@ -1,0 +1,41 @@
+#Maven
+/target/
+.mvn/
+!/.mvn/wrapper/maven-wrapper.jar
+
+#Gradle
+/build/
+.gradle/
+
+#Logs
+*.log
+
+#Class files
+*.class
+
+#Package files
+*.jar
+*.war
+*.ear
+*.nar
+*.rar
+*.zip
+*.tar.gz
+
+#IntelliJ project files
+.idea/
+*.iml
+*.iws
+*.ipr
+
+#Compiled Java bytecode
+target/
+
+#macOS system files
+.DS_Store
+
+#Windows thumbnail cache files
+Thumbs.db
+
+#BlueJ files
+*.ctxt
