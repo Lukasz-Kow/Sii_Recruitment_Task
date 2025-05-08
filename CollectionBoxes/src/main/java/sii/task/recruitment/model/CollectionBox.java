@@ -27,5 +27,6 @@ public class CollectionBox {
     private FundraisingEvent fundraisingEvent;
 
     @OneToMany(mappedBy = "collectionBox", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BoxMoney> collectedMoney = new ArrayList<>();
+    private List<Donation> collectedMoney = new ArrayList<>();
+
 }

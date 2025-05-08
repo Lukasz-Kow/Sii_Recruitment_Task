@@ -12,7 +12,8 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoxMoney {
+@Builder
+public class Donation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
