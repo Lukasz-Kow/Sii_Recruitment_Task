@@ -1,5 +1,6 @@
 package sii.task.recruitment.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
@@ -26,6 +27,7 @@ public class Donation {
 
     @ManyToOne
     @JoinColumn(name = "collection_box_id", nullable = false)
+    @JsonBackReference
     private CollectionBox collectionBox;
 
     @NotNull(message = "Amount must be provided.")

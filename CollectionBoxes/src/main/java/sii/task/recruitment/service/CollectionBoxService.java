@@ -3,6 +3,7 @@ package sii.task.recruitment.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sii.task.recruitment.CurrencyConverter;
 import sii.task.recruitment.exception.*;
 import sii.task.recruitment.model.*;
 import sii.task.recruitment.repository.*;
@@ -14,16 +15,18 @@ import java.util.List;
 public class CollectionBoxService {
     private final CollectionBoxRepository collectionBoxRepository;
     private final FundraisingEventRepository fundraisingEventRepository;
-    private final DonationRepository donationRepository;
-
+    private final CurrencyConverter currencyConverter;
+    private final FundraisingEventService fundraisingEventService;
 
     @Autowired
     public CollectionBoxService(CollectionBoxRepository collectionBoxRepository,
                                 FundraisingEventRepository fundraisingEventRepository,
-                                DonationRepository donationRepository) {
+                                CurrencyConverter currencyConverter,
+                                FundraisingEventService fundraisingEventService) {
         this.collectionBoxRepository = collectionBoxRepository;
         this.fundraisingEventRepository = fundraisingEventRepository;
-        this.donationRepository = donationRepository;
+        this.currencyConverter = currencyConverter;
+        this.fundraisingEventService = fundraisingEventService;
     }
 
     @Transactional
@@ -65,20 +68,32 @@ public class CollectionBoxService {
     }
 
     @Transactional
-    public void addMoneyToTheCollectionBox(Long collectionBoxId, BigDecimal money, Currency currency) throws IllegalAmountException {
-        if (money.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalAmountException("Money > 0");
-        }
+    public boolean transferMoneyToEventsAccount(Long collectionBoxId) {
         CollectionBox box = collectionBoxRepository.findById(collectionBoxId)
                 .orElseThrow(() -> new CollectionBoxNotFoundException("collectionBoxId")); //TODO: Add handler for exceptions
 
-        Donation donation = Donation.builder()
-                .amount(money)
-                .currency(currency)
-                .collectionBox(box).build();
-        donationRepository.save(donation);
-    }
+        if (box.getCollectedMoney().isEmpty()) {
+            return false;
+        }
 
+        FundraisingEvent boxesEvent = box.getFundraisingEvent();
+        Currency targetCurrency = boxesEvent.getEventCurrency();
+        BigDecimal totalMoney = BigDecimal.ZERO;
+
+        for (Donation donation : box.getCollectedMoney()) {
+            BigDecimal convertedMoney;
+            if (donation.getCurrency().equals(targetCurrency)) {
+                convertedMoney = donation.getAmount();
+            } else {
+                convertedMoney = currencyConverter.convertCurrency(donation.getAmount(), donation.getCurrency(), targetCurrency);
+            }
+            totalMoney = totalMoney.add(convertedMoney);
+        }
+        fundraisingEventService.addToBalance(boxesEvent, totalMoney);
+        box.getCollectedMoney().clear();
+        collectionBoxRepository.save(box);
+        return true;
+    }
 
 
 }
