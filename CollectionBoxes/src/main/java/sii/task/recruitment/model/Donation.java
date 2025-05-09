@@ -31,7 +31,7 @@ public class Donation {
     private CollectionBox collectionBox;
 
     @NotNull(message = "Amount must be provided.")
-    @DecimalMin(value = "0.00", message = "Amount can not be negative.")
+    @DecimalMin(value = "0.01", message = "Amount must be greater than zero.")
     @Column(nullable = false, precision = 11, scale = 2)
     private BigDecimal amount = BigDecimal.ZERO;
 }

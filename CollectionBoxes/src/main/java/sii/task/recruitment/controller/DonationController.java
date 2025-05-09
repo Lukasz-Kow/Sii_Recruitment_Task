@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sii.task.recruitment.model.Currency;
+import sii.task.recruitment.dto.AddDonation;
+import sii.task.recruitment.exception.IllegalAmountException;
 import sii.task.recruitment.model.Donation;
 import sii.task.recruitment.service.DonationService;
 
-import java.math.BigDecimal;
-
-@RestController("/api/donation")
+@RestController
+@RequestMapping("/api/donations")
 public class DonationController {
     private final DonationService donationService;
 
@@ -20,8 +20,8 @@ public class DonationController {
     }
 
     @PostMapping("/{boxId}")
-    public ResponseEntity<Donation> addDonation(@PathVariable Long boxId, @RequestBody BigDecimal amount, Currency currency) {
-        Donation donation = donationService.addMoneyToTheCollectionBox(boxId, amount, currency);
+    public ResponseEntity<Donation> addDonation(@PathVariable Long boxId, @RequestBody AddDonation request) throws IllegalAmountException {
+        Donation donation = donationService.addMoneyToTheCollectionBox(boxId, request.amount(), request.currency());
         return new ResponseEntity<>(donation, HttpStatus.CREATED);
     }
 }

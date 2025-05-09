@@ -22,7 +22,7 @@ public class FundraisingEvent {
     @Column(nullable = false)
     private String eventName;
 
-    @NotBlank(message = "Currency must be specified.")
+    @NotNull(message = "Currency must be specified.")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Currency eventCurrency;

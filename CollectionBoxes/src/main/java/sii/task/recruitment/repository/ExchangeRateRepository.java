@@ -7,6 +7,6 @@ import sii.task.recruitment.model.ExchangeRate;
 import java.util.Optional;
 
 public interface ExchangeRateRepository extends JpaRepository<ExchangeRate, Long> {
-    Optional<ExchangeRate> findBySourceCurrencyAndTargetCurrency(Currency sourceCurrency, Currency targerCurrency);
+    Optional<ExchangeRate> findBySourceCurrencyAndTargetCurrency(Currency sourceCurrency, Currency targetCurrency);
 
 }

@@ -35,8 +35,8 @@ public class FundraisingEventService {
         return fundraisingEventRepository.save(event);
     }
 
-    public Optional<FundraisingEvent> getFundraisingEventById(Long id) {
-        return fundraisingEventRepository.findById(id);
+    public Optional<FundraisingEvent> getFundraisingEventByName(String nameEvent) {
+        return fundraisingEventRepository.findByEventName(nameEvent);
     }
 
     public List<FundraisingEvent> getAllFundraisingEvents() {
