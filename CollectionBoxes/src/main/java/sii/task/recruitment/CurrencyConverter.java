@@ -24,10 +24,10 @@ public class CurrencyConverter {
     public BigDecimal convertCurrency(BigDecimal amount, Currency sourceCurrency, Currency targetCurrency) {
 
         if (amount == null || sourceCurrency == null || targetCurrency == null) {
-            throw new CurrencyConversionException("TODO");
+            throw new CurrencyConversionException("Amount and currency are required.");
         }
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new CurrencyConversionException("TODO");
+            throw new CurrencyConversionException("Amount must be greater than zero.");
         }
         if (sourceCurrency == targetCurrency) {
             return amount;
@@ -44,7 +44,7 @@ public class CurrencyConverter {
             BigDecimal reversedRate = BigDecimal.ONE.divide(reverseRate.get().getRate(), 6, RoundingMode.HALF_UP);
             return amount.multiply(reversedRate).setScale(6, RoundingMode.HALF_UP);
         }
-        throw new ExchangeRateNotFoundException("TODO");
+        throw new ExchangeRateNotFoundException("No exchange rate found between " + sourceCurrency + " and " + targetCurrency + ".");
 
     }
 }

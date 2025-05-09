@@ -23,12 +23,12 @@ public class DonationService {
     }
 
     @Transactional
-    public Donation addMoneyToTheCollectionBox(Long collectionBoxId, BigDecimal money, Currency currency) {
+    public Donation addMoneyToTheCollectionBox(Long collectionBoxId, BigDecimal money, Currency currency) throws IllegalAmountException {
         if (money.compareTo(BigDecimal.ZERO) <= 0) {
-            //exception
+            throw new IllegalAmountException("Donation amount must be greater than 0.");
         }
         CollectionBox box = collectionBoxRepository.findById(collectionBoxId)
-                .orElseThrow(() -> new CollectionBoxNotFoundException("collectionBoxId")); //TODO: Add handler for exceptions
+                .orElseThrow(() -> new CollectionBoxNotFoundException("Collection box not found with ID:" + collectionBoxId));
 
         Donation donation = Donation.builder()
                 .amount(money)

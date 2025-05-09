@@ -6,7 +6,8 @@ import org.springframework.stereotype.Service;
 import sii.task.recruitment.CurrencyConverter;
 import sii.task.recruitment.exception.*;
 import sii.task.recruitment.model.*;
-import sii.task.recruitment.repository.*;
+import sii.task.recruitment.repository.CollectionBoxRepository;
+import sii.task.recruitment.repository.FundraisingEventRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,7 +33,7 @@ public class CollectionBoxService {
     @Transactional
     public CollectionBox registerNewCollectionBox(String identifier) {
         if (collectionBoxRepository.existsByIdentifier(identifier)) {
-            throw new CollectionBoxExistsException("identifier");
+            throw new CollectionBoxExistsException("Collection box already exists with identifier: " + identifier);
         }
         CollectionBox newBox = new CollectionBox();
         newBox.setIdentifier(identifier);
@@ -46,17 +47,16 @@ public class CollectionBoxService {
     @Transactional
     public void unregisterCollectionBox(String identifier) {
         CollectionBox box = collectionBoxRepository.findByIdentifier(identifier)
-                .orElseThrow(() -> new CollectionBoxNotFoundException("collectionBoxId")); //TODO: Add handler for exceptions
-
+                .orElseThrow(() -> new CollectionBoxNotFoundException("Collection box not found with identifier: " + identifier));
         collectionBoxRepository.delete(box);
     }
 
     @Transactional
     public boolean assignToFundraisingEvent(Long collectionBoxId, Long fundraisingEventId) {
         CollectionBox box = collectionBoxRepository.findById(collectionBoxId)
-                .orElseThrow(() -> new CollectionBoxNotFoundException("collectionBoxId")); //TODO: Add handler for exceptions
+                .orElseThrow(() -> new CollectionBoxNotFoundException("Collection box not found with ID:" + collectionBoxId));
         FundraisingEvent event = fundraisingEventRepository.findById(fundraisingEventId)
-                .orElseThrow(() -> new FundraisingEventNotFoundException("fundraisingEventId")); //TODO: Add handler for exceptions
+                .orElseThrow(() -> new FundraisingEventNotFoundException("Fundraising event not found with ID:" + fundraisingEventId));
 
         if (!box.getCollectedMoney().isEmpty()) {
             throw new CollectionBoxIsNotEmptyException("");
@@ -70,7 +70,7 @@ public class CollectionBoxService {
     @Transactional
     public boolean transferMoneyToEventsAccount(Long collectionBoxId) {
         CollectionBox box = collectionBoxRepository.findById(collectionBoxId)
-                .orElseThrow(() -> new CollectionBoxNotFoundException("collectionBoxId")); //TODO: Add handler for exceptions
+                .orElseThrow(() -> new CollectionBoxNotFoundException("Collection box not found with ID:" + collectionBoxId));
 
         if (box.getCollectedMoney().isEmpty()) {
             return false;
