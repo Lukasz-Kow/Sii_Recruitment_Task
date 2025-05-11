@@ -59,7 +59,7 @@ public class CollectionBoxService {
                 .orElseThrow(() -> new FundraisingEventNotFoundException("Fundraising event not found with ID:" + fundraisingEventId));
 
         if (!box.getCollectedMoney().isEmpty()) {
-            throw new CollectionBoxIsNotEmptyException("");
+            throw new CollectionBoxIsNotEmptyException("You can only assign empty collection boxes to a fundraising event.");
         }
 
         box.setFundraisingEvent(event);
