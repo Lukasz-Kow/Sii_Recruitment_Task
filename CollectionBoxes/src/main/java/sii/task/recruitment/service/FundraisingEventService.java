@@ -4,6 +4,7 @@ package sii.task.recruitment.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sii.task.recruitment.dto.FundraisingEventResponse;
 import sii.task.recruitment.model.Currency;
 import sii.task.recruitment.model.FundraisingEvent;
 import sii.task.recruitment.repository.FundraisingEventRepository;
@@ -24,7 +25,6 @@ public class FundraisingEventService {
         this.fundraisingEventRepository = fundraisingEventRepository;
     }
 
-    @Transactional
     public FundraisingEvent createFundraisingEvent(String eventName, Currency currency) {
         FundraisingEvent event = FundraisingEvent.builder()
                 .eventName(eventName)
@@ -47,6 +47,10 @@ public class FundraisingEventService {
     public void addToBalance(FundraisingEvent event, BigDecimal amount) {
         event.setAccountBalance(event.getAccountBalance().add(amount));
         fundraisingEventRepository.save(event);
+    }
+
+    public FundraisingEventResponse toDto(FundraisingEvent fundraisingEvent) {
+        return new FundraisingEventResponse(fundraisingEvent.getEventName(), fundraisingEvent.getEventCurrency(), fundraisingEvent.getAccountBalance());
     }
 
 }

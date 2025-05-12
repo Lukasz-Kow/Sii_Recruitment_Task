@@ -20,7 +20,6 @@ public class Donation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Currency must be provided.")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Currency currency;
@@ -30,7 +29,6 @@ public class Donation {
     @JsonBackReference
     private CollectionBox collectionBox;
 
-    @NotNull(message = "Amount must be provided.")
     @DecimalMin(value = "0.01", message = "Amount must be greater than zero.")
     @Column(nullable = false, precision = 11, scale = 2)
     private BigDecimal amount = BigDecimal.ZERO;

@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
             CollectionBoxIsNotEmptyException.class,
             CurrencyConversionException.class
     })
-    public ResponseEntity<Map<String,Object>> handleBadRequestException(Exception ex) {
+    public ResponseEntity<Map<String, Object>> handleBadRequestException(Exception ex) {
         return buildErrorResponse("Bad Request", HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
@@ -62,12 +62,15 @@ public class GlobalExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         String errorMessage;
 
-        String fieldName = ex.getPath().stream().map(JsonMappingException.Reference::getFieldName).reduce((first, second) -> second).orElse("unknown");
+        String fieldName = ex.getPath().stream().map(JsonMappingException.Reference::getFieldName).reduce((first, second) -> second)
+                .orElse("unknown");
 
         if (ex.getTargetType().getSimpleName().equals("Currency")) {
-            errorMessage = String.format("Invalid value for '%s': '%s'. Expected type: %s", fieldName, ex.getValue(), ex.getTargetType().getSimpleName());
+            errorMessage = String.format("Invalid value for '%s': '%s'. Expected type: %s", fieldName, ex.getValue(), ex.getTargetType()
+                    .getSimpleName());
         } else {
-            errorMessage = String.format("Invalid value for '%s': '%s'. Expected type: %s", fieldName, ex.getValue(), ex.getTargetType().getSimpleName());
+            errorMessage = String.format("Invalid value for '%s': '%s'. Expected type: %s", fieldName, ex.getValue(), ex.getTargetType()
+                    .getSimpleName());
         }
 
         errors.put(fieldName, errorMessage);
@@ -93,6 +96,19 @@ public class GlobalExceptionHandler {
         response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         response.put("message", "Internal error occurred. Please try again later.");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
+
+    @ExceptionHandler({
+            CollectionBoxEmptyException.class,
+            CollectionBoxNotAssignedException.class
+    })
+    public ResponseEntity<Map<String, Object>> handleTransferExceptions(RuntimeException ex) {
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("error", "Transfer Error");
+        response.put("status", HttpStatus.BAD_REQUEST.value());
+        response.put("message", ex.getMessage());
+        return ResponseEntity.badRequest().body(response);
     }
 
     private ResponseEntity<Map<String, Object>> buildErrorResponse(String error, HttpStatus status, String message) {

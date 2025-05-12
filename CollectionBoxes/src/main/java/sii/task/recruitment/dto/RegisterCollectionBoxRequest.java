@@ -1,4 +1,10 @@
 package sii.task.recruitment.dto;
 
-public record RegisterCollectionBoxRequest(String identifier) {
+import jakarta.validation.constraints.NotBlank;
+
+public record RegisterCollectionBoxRequest(
+
+        @NotBlank(message = "Box identifier is mandatory.")
+        String identifier
+) {
 }

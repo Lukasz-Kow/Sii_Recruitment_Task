@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
+ @NoArgsConstructor
 public class CollectionBox {
 
     @Id

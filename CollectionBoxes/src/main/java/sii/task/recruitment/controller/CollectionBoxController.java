@@ -1,5 +1,6 @@
 package sii.task.recruitment.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +25,15 @@ public class CollectionBoxController {
     }
 
     @PostMapping
-    public ResponseEntity<CollectionBoxResponse> registerCollectionBox(@RequestBody RegisterCollectionBoxRequest request) {
-        CollectionBox collectionBox =collectionBoxService.registerNewCollectionBox(request.identifier());
-        return new ResponseEntity<>(toDto(collectionBox), HttpStatus.CREATED);
+    public ResponseEntity<CollectionBoxResponse> registerCollectionBox(@Valid @RequestBody RegisterCollectionBoxRequest request) {
+        CollectionBox collectionBox = collectionBoxService.registerNewCollectionBox(request.identifier());
+        return new ResponseEntity<>(collectionBoxService.toDto(collectionBox), HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<CollectionBoxResponse>> getCollectionBoxes() {
-        List<CollectionBoxResponse> collectionBoxes = collectionBoxService.getAllCollectionBoxes().stream().map(this::toDto).collect(Collectors.toList());
+        List<CollectionBoxResponse> collectionBoxes = collectionBoxService.getAllCollectionBoxes().stream().map(collectionBoxService::toDto)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(collectionBoxes);
     }
 
@@ -42,28 +44,15 @@ public class CollectionBoxController {
 
     @PutMapping("/{boxId}/assign/{eventId}")
     public ResponseEntity<String> assignToEvent(@PathVariable Long boxId, @PathVariable Long eventId) {
-        boolean success = collectionBoxService.assignToFundraisingEvent(boxId, eventId);
-        if (success) {
-            return new ResponseEntity<>("Successfully assigned to event", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Failed to assign to event", HttpStatus.BAD_REQUEST);
-        }
+        collectionBoxService.assignToFundraisingEvent(boxId, eventId);
+        return new ResponseEntity<>("Successfully assigned to event", HttpStatus.OK);
     }
 
     @PostMapping("/{boxId}/transfer")
     public ResponseEntity<String> transferToEvent(@PathVariable Long boxId) {
-        boolean success = collectionBoxService.transferMoneyToEventsAccount(boxId);
-        if (success) {
-            return ResponseEntity.ok("Successfully transferred to event");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to transferred to event");
-        }
+        collectionBoxService.transferMoneyToEventsAccount(boxId);
+        return ResponseEntity.ok("Successfully transferred to event");
     }
 
-    private CollectionBoxResponse toDto(CollectionBox collectionBox) {
-        boolean isAssigned = collectionBox.getFundraisingEvent() != null;
-        boolean isEmpty = collectionBox.getFundraisingEvent() == null || collectionBox.getCollectedMoney().isEmpty();
-        return new CollectionBoxResponse(collectionBox.getId(), collectionBox.getIdentifier(), isAssigned, isEmpty);
-    }
 
 }

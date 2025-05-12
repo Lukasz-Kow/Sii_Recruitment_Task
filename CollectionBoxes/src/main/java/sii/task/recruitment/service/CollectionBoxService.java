@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sii.task.recruitment.CurrencyConverter;
+import sii.task.recruitment.dto.CollectionBoxResponse;
 import sii.task.recruitment.exception.*;
 import sii.task.recruitment.model.*;
 import sii.task.recruitment.repository.CollectionBoxRepository;
@@ -32,9 +33,6 @@ public class CollectionBoxService {
 
     @Transactional
     public CollectionBox registerNewCollectionBox(String identifier) {
-        if (collectionBoxRepository.existsByIdentifier(identifier)) {
-            throw new CollectionBoxExistsException("Collection box already exists with identifier: " + identifier);
-        }
         CollectionBox newBox = new CollectionBox();
         newBox.setIdentifier(identifier);
         return collectionBoxRepository.save(newBox);
@@ -47,16 +45,15 @@ public class CollectionBoxService {
     @Transactional
     public void unregisterCollectionBox(String identifier) {
         CollectionBox box = collectionBoxRepository.findByIdentifier(identifier)
-                .orElseThrow(() -> new CollectionBoxNotFoundException("Collection box not found with identifier: " + identifier));
+                .orElseThrow(() -> new CollectionBoxNotFoundException(String.format("Collection box with identifier: %s, not found.", identifier)));
         collectionBoxRepository.delete(box);
     }
 
-    @Transactional
-    public boolean assignToFundraisingEvent(Long collectionBoxId, Long fundraisingEventId) {
+    public void assignToFundraisingEvent(Long collectionBoxId, Long fundraisingEventId) {
         CollectionBox box = collectionBoxRepository.findById(collectionBoxId)
-                .orElseThrow(() -> new CollectionBoxNotFoundException("Collection box not found with ID:" + collectionBoxId));
+                .orElseThrow(() -> new CollectionBoxNotFoundException(String.format("Collection box with ID: %d, not found.", collectionBoxId)));
         FundraisingEvent event = fundraisingEventRepository.findById(fundraisingEventId)
-                .orElseThrow(() -> new FundraisingEventNotFoundException("Fundraising event not found with ID:" + fundraisingEventId));
+                .orElseThrow(() -> new FundraisingEventNotFoundException(String.format("Fundraising event  with ID: %d, not found.", fundraisingEventId)));
 
         if (!box.getCollectedMoney().isEmpty()) {
             throw new CollectionBoxIsNotEmptyException("You can only assign empty collection boxes to a fundraising event.");
@@ -64,35 +61,39 @@ public class CollectionBoxService {
 
         box.setFundraisingEvent(event);
         collectionBoxRepository.save(box);
-        return true;
     }
 
     @Transactional
-    public boolean transferMoneyToEventsAccount(Long collectionBoxId) {
+    public void transferMoneyToEventsAccount(Long collectionBoxId) {
         CollectionBox box = collectionBoxRepository.findById(collectionBoxId)
-                .orElseThrow(() -> new CollectionBoxNotFoundException("Collection box not found with ID:" + collectionBoxId));
+                .orElseThrow(() -> new CollectionBoxNotFoundException(String.format("Collection box with ID: %d, not found.", collectionBoxId)));
 
         if (box.getCollectedMoney().isEmpty()) {
-            return false;
+            throw new CollectionBoxEmptyException(String.format("Collection box with ID: %d, does not contain any money.", collectionBoxId));
         }
 
         FundraisingEvent boxesEvent = box.getFundraisingEvent();
-        Currency targetCurrency = boxesEvent.getEventCurrency();
-        BigDecimal totalMoney = BigDecimal.ZERO;
 
-        for (Donation donation : box.getCollectedMoney()) {
-            BigDecimal convertedMoney;
-            if (donation.getCurrency().equals(targetCurrency)) {
-                convertedMoney = donation.getAmount();
-            } else {
-                convertedMoney = currencyConverter.convertCurrency(donation.getAmount(), donation.getCurrency(), targetCurrency);
-            }
-            totalMoney = totalMoney.add(convertedMoney);
+        if (boxesEvent == null) {
+            throw new CollectionBoxNotAssignedException(String.format("Cannot transfer money, collection box with ID %d is not assigned to any event.", collectionBoxId));
         }
+
+        Currency targetCurrency = boxesEvent.getEventCurrency();
+        BigDecimal totalMoney = box.getCollectedMoney().stream().map(donation -> donation.getCurrency().equals(targetCurrency)
+                        ? donation.getAmount()
+                        : currencyConverter.convertCurrency(donation.getAmount(), donation.getCurrency(), targetCurrency))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
         fundraisingEventService.addToBalance(boxesEvent, totalMoney);
         box.getCollectedMoney().clear();
         collectionBoxRepository.save(box);
-        return true;
+    }
+
+    public CollectionBoxResponse toDto(CollectionBox collectionBox) {
+        boolean isAssigned = collectionBox.getFundraisingEvent() != null;
+        boolean isEmpty = collectionBox.getFundraisingEvent() == null || collectionBox.getCollectedMoney().isEmpty();
+        return new CollectionBoxResponse(collectionBox.getId(), collectionBox.getIdentifier(), isAssigned, isEmpty);
     }
 
 

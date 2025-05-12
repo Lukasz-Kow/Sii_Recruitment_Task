@@ -1,5 +1,6 @@
 package sii.task.recruitment.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,25 +23,24 @@ public class FundraisingEventController {
     }
 
     @PostMapping
-    public ResponseEntity<FundraisingEventResponse> createFundraisingEvent(@RequestBody CreateFundraisingEventRequest request) {
+    public ResponseEntity<FundraisingEventResponse> createFundraisingEvent(@Valid @RequestBody CreateFundraisingEventRequest request) {
         FundraisingEvent fundraisingEvent = fundraisingEventService.createFundraisingEvent(request.eventName(), request.currency());
-        return new ResponseEntity<>(toDto(fundraisingEvent), HttpStatus.CREATED);
+        return new ResponseEntity<>(fundraisingEventService.toDto(fundraisingEvent), HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<FundraisingEventResponse>> getAllFundraisingEvents() {
-        List<FundraisingEventResponse> responses = fundraisingEventService.getAllFundraisingEvents().stream().map(this::toDto)
+        List<FundraisingEventResponse> responses = fundraisingEventService.getAllFundraisingEvents().stream()
+                .map(fundraisingEventService::toDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<FundraisingEventResponse> getEventByName(@RequestBody SearchFundraisingEventByNameRequest request) {
-        return fundraisingEventService.getFundraisingEventByName(request.eventName()).map(event -> ResponseEntity.ok(toDto(event))).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<FundraisingEventResponse> getEventByName(@Valid @RequestBody SearchFundraisingEventByNameRequest request) {
+        return fundraisingEventService.getFundraisingEventByName(request.eventName())
+                .map(event -> ResponseEntity.ok(fundraisingEventService.toDto(event))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    private FundraisingEventResponse toDto(FundraisingEvent fundraisingEvent) {
-        return new FundraisingEventResponse(fundraisingEvent.getEventName(), fundraisingEvent.getEventCurrency(), fundraisingEvent.getAccountBalance());
-    }
 
 }

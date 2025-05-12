@@ -1,4 +1,10 @@
 package sii.task.recruitment.dto;
 
-public record SearchFundraisingEventByNameRequest(String eventName) {
+import jakarta.validation.constraints.NotBlank;
+
+public record SearchFundraisingEventByNameRequest(
+
+        @NotBlank(message = "Event name is required.")
+        String eventName
+) {
 }
