@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import sii.task.recruitment.dto.FinancialReportDto;
-import sii.task.recruitment.model.Currency;
 import sii.task.recruitment.model.FundraisingEvent;
 import sii.task.recruitment.repository.FundraisingEventRepository;
 
@@ -33,13 +32,13 @@ class FundraisingEventServiceTest {
     void shouldCreateFundraisingEvent() {
         FundraisingEvent fundraisingEvent = FundraisingEvent.builder()
                 .eventName("Event_1")
-                .eventCurrency(Currency.GBP)
+                .eventCurrency("GBP")
                 .accountBalance(BigDecimal.ZERO)
                 .build();
 
         when(fundraisingEventRepository.save(any(FundraisingEvent.class))).thenReturn(fundraisingEvent);
 
-        FundraisingEvent createdEvent = fundraisingEventService.createFundraisingEvent("Event_1", Currency.GBP);
+        FundraisingEvent createdEvent = fundraisingEventService.createFundraisingEvent("Event_1", "GBP");
 
         Assertions.assertThat(createdEvent).usingRecursiveComparison().isEqualTo(fundraisingEvent);
 
@@ -91,7 +90,7 @@ class FundraisingEventServiceTest {
     @Test
     void shouldGenerateFinancialReport() {
         List<FinancialReportDto> expectedFinancialReportDtos = List.of(
-                new FinancialReportDto("Event_1", new BigDecimal("100.00"), Currency.EUR));
+                new FinancialReportDto("Event_1", new BigDecimal("100.00"), "EUR"));
 
         when(fundraisingEventRepository.getFinancialReport()).thenReturn(expectedFinancialReportDtos);
 

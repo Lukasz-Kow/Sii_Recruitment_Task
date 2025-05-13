@@ -11,7 +11,6 @@ import sii.task.recruitment.model.CollectionBox;
 import sii.task.recruitment.service.CollectionBoxService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/collection-boxes")
@@ -33,7 +32,7 @@ public class CollectionBoxController {
     @GetMapping
     public ResponseEntity<List<CollectionBoxResponse>> getCollectionBoxes() {
         List<CollectionBoxResponse> collectionBoxes = collectionBoxService.getAllCollectionBoxes().stream().map(collectionBoxService::toDto)
-                .collect(Collectors.toList());
+                .toList();
         return ResponseEntity.ok(collectionBoxes);
     }
 

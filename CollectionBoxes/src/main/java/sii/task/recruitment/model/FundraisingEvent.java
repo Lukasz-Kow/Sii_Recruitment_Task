@@ -1,7 +1,8 @@
 package sii.task.recruitment.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -22,10 +23,10 @@ public class FundraisingEvent {
     @Column(nullable = false)
     private String eventName;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Currency eventCurrency;
+    private String eventCurrency;
 
+    @Builder.Default
     @DecimalMin(value = "0.00", message = "Account balance can not be negative.")
     @Column(nullable = false, precision = 11, scale = 2)
     private BigDecimal accountBalance = BigDecimal.ZERO;

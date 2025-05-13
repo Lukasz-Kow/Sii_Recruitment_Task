@@ -4,9 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -28,7 +28,7 @@ class CollectionBoxControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @MockBean
+    @MockitoBean
     private CollectionBoxService collectionBoxService;
 
     @BeforeEach
@@ -159,8 +159,8 @@ class CollectionBoxControllerTest {
         when(collectionBoxService.registerNewCollectionBox("Box-001")).thenThrow(new DataIntegrityViolationException("DB error", new RuntimeException("Foreign key error")));
 
         mvc.perform(post("/api/collection-boxes")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"identifier\": \"Box-001\"}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"identifier\": \"Box-001\"}"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.error").value("Internal Server Error"))
                 .andExpect(jsonPath("$.status").value("500"))

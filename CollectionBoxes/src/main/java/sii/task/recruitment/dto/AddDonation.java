@@ -1,7 +1,7 @@
 package sii.task.recruitment.dto;
 
-import jakarta.validation.constraints.NotNull;
-import sii.task.recruitment.model.Currency;
+import jakarta.validation.constraints.*;
+//import sii.task.recruitment.model.Currency;
 
 import java.math.BigDecimal;
 
@@ -12,7 +12,8 @@ public record AddDonation(
         @NotNull(message = "Amount must be provided.")
         BigDecimal amount,
 
-        @NotNull(message = "Currency must be provided.")
-        Currency currency) {
+        @NotBlank(message = "Currency must be provided.")
+        @Pattern(regexp = "^[A-Z]{3}$", message = "Currency must be a valid 3-letter ISO code.")
+        String currency) {
 
 }

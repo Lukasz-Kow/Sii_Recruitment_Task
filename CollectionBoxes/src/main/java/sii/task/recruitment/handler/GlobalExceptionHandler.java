@@ -56,30 +56,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
-    @ExceptionHandler({InvalidFormatException.class})
-    public ResponseEntity<Map<String, Object>> handleInvalidFormatException(InvalidFormatException ex) {
-        Map<String, String> errors = new HashMap<>();
-        Map<String, Object> response = new HashMap<>();
-        String errorMessage;
-
-        String fieldName = ex.getPath().stream().map(JsonMappingException.Reference::getFieldName).reduce((first, second) -> second)
-                .orElse("unknown");
-
-        if (ex.getTargetType().getSimpleName().equals("Currency")) {
-            errorMessage = String.format("Invalid value for '%s': '%s'. Expected type: %s", fieldName, ex.getValue(), ex.getTargetType()
-                    .getSimpleName());
-        } else {
-            errorMessage = String.format("Invalid value for '%s': '%s'. Expected type: %s", fieldName, ex.getValue(), ex.getTargetType()
-                    .getSimpleName());
-        }
-
-        errors.put(fieldName, errorMessage);
-        response.put("error", "Bad Request");
-        response.put("status", HttpStatus.BAD_REQUEST.value());
-        response.put("errors", errors);
-        return ResponseEntity.badRequest().body(response);
-    }
-
     @ExceptionHandler({DataIntegrityViolationException.class})
     public ResponseEntity<Map<String, Object>> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         Map<String, Object> response = new HashMap<>();

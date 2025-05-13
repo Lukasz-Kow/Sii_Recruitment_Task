@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sii.task.recruitment.dto.FinancialReportDto;
 import sii.task.recruitment.dto.FundraisingEventResponse;
-import sii.task.recruitment.model.Currency;
+
 import sii.task.recruitment.model.FundraisingEvent;
 import sii.task.recruitment.repository.FundraisingEventRepository;
 
@@ -26,7 +26,7 @@ public class FundraisingEventService {
         this.fundraisingEventRepository = fundraisingEventRepository;
     }
 
-    public FundraisingEvent createFundraisingEvent(String eventName, Currency currency) {
+    public FundraisingEvent createFundraisingEvent(String eventName, String currency) {
         FundraisingEvent event = FundraisingEvent.builder()
                 .eventName(eventName)
                 .eventCurrency(currency)

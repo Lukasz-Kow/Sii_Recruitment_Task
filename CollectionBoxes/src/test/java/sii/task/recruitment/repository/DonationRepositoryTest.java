@@ -28,14 +28,14 @@ class DonationRepositoryTest {
 
         Donation donation = Donation.builder()
                 .amount(new BigDecimal("55.00"))
-                .currency(Currency.EUR)
+                .currency("EUR")
                 .collectionBox(savedBox)
                 .build();
 
         Donation savedDonation = donationRepository.save(donation);
         assertNotNull(savedDonation.getId());
         assertEquals(new BigDecimal("55.00"), savedDonation.getAmount());
-        assertEquals(Currency.EUR, savedDonation.getCurrency());
+        assertEquals("EUR", savedDonation.getCurrency());
         assertEquals("Box-Test", savedDonation.getCollectionBox().getIdentifier());
     }
 
@@ -48,7 +48,7 @@ class DonationRepositoryTest {
 
         Donation donation = Donation.builder()
                 .amount(new BigDecimal("215.00"))
-                .currency(Currency.USD)
+                .currency("USD")
                 .collectionBox(savedBox)
                 .build();
 

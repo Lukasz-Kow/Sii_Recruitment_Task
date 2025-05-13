@@ -19,9 +19,8 @@ public class Donation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Currency currency;
+    private String currency;
 
     @ManyToOne
     @JoinColumn(name = "collection_box_id", nullable = false)

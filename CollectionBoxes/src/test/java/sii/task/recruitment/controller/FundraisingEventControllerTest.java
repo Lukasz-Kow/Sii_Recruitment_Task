@@ -5,14 +5,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import sii.task.recruitment.dto.FinancialReportDto;
 import sii.task.recruitment.dto.FundraisingEventResponse;
-import sii.task.recruitment.model.Currency;
+
 import sii.task.recruitment.model.FundraisingEvent;
 import sii.task.recruitment.service.FundraisingEventService;
 
@@ -34,7 +34,7 @@ class FundraisingEventControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @MockBean
+    @MockitoBean
     private FundraisingEventService fundraisingEventService;
 
     @BeforeEach
@@ -46,12 +46,12 @@ class FundraisingEventControllerTest {
     void shouldCreateFundraisingEvent() throws Exception {
         FundraisingEvent fundraisingEvent = FundraisingEvent.builder()
                 .eventName("Event_1")
-                .eventCurrency(Currency.EUR)
+                .eventCurrency("EUR")
                 .accountBalance(BigDecimal.ZERO)
                 .build();
 
-        when(fundraisingEventService.createFundraisingEvent("Event_1", Currency.EUR)).thenReturn(fundraisingEvent);
-        when(fundraisingEventService.toDto(fundraisingEvent)).thenReturn(new FundraisingEventResponse("Event_1", Currency.EUR, BigDecimal.ZERO));
+        when(fundraisingEventService.createFundraisingEvent("Event_1", "EUR")).thenReturn(fundraisingEvent);
+        when(fundraisingEventService.toDto(fundraisingEvent)).thenReturn(new FundraisingEventResponse("Event_1", "EUR", BigDecimal.ZERO));
 
 
         mvc.perform(post("/api/fundraising-events")
@@ -66,12 +66,12 @@ class FundraisingEventControllerTest {
     void shouldGetAllFundraisingEvents() throws Exception {
         FundraisingEvent fundraisingEvent = FundraisingEvent.builder()
                 .eventName("Event_1")
-                .eventCurrency(Currency.USD)
+                .eventCurrency("USD")
                 .accountBalance(new BigDecimal("100.00"))
                 .build();
 
         when(fundraisingEventService.getAllFundraisingEvents()).thenReturn(List.of(fundraisingEvent));
-        when(fundraisingEventService.toDto(fundraisingEvent)).thenReturn(new FundraisingEventResponse("Event_1", Currency.USD, new BigDecimal("100.00")));
+        when(fundraisingEventService.toDto(fundraisingEvent)).thenReturn(new FundraisingEventResponse("Event_1", "USD", new BigDecimal("100.00")));
 
         mvc.perform(get("/api/fundraising-events"))
                 .andExpect(status().isOk())
@@ -83,12 +83,12 @@ class FundraisingEventControllerTest {
     void shouldGetFundraisingEventByName() throws Exception {
         FundraisingEvent fundraisingEvent = FundraisingEvent.builder()
                 .eventName("Event_1")
-                .eventCurrency(Currency.GBP)
+                .eventCurrency("GBP")
                 .accountBalance(new BigDecimal("200.00"))
                 .build();
 
         when(fundraisingEventService.getFundraisingEventByName("Event_1")).thenReturn(Optional.of(fundraisingEvent));
-        when(fundraisingEventService.toDto(fundraisingEvent)).thenReturn(new FundraisingEventResponse("Event_1", Currency.GBP, new BigDecimal("200.00")));
+        when(fundraisingEventService.toDto(fundraisingEvent)).thenReturn(new FundraisingEventResponse("Event_1", "GBP", new BigDecimal("200.00")));
 
         mvc.perform(get("/api/fundraising-events/search")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -101,8 +101,8 @@ class FundraisingEventControllerTest {
     @Test
     void shouldReturnFinancialReport() throws Exception {
         List<FinancialReportDto> report = List.of(
-                new FinancialReportDto("Event_1", new BigDecimal("100.00"), Currency.USD),
-                new FinancialReportDto("Event_2", new BigDecimal("200.00"), Currency.GBP)
+                new FinancialReportDto("Event_1", new BigDecimal("100.00"), "USD"),
+                new FinancialReportDto("Event_2", new BigDecimal("200.00"), "GBP")
         );
 
         when(fundraisingEventService.generateFinancialReport()).thenReturn(report);

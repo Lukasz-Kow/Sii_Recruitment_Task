@@ -36,7 +36,7 @@ class DonationServiceTest {
     void shouldAddDonation() {
         Long collectionBoxId = 1L;
         BigDecimal amount = new BigDecimal("100.00");
-        Currency currency = Currency.EUR;
+        String currency = "EUR";
 
         CollectionBox collectionBox = new CollectionBox();
         collectionBox.setId(collectionBoxId);
@@ -66,7 +66,7 @@ class DonationServiceTest {
         when(collectionBoxRepository.findById(boxId)).thenReturn(Optional.empty());
 
         Assertions.assertThatThrownBy(() -> {
-            donationService.addMoneyToTheCollectionBox(boxId, new BigDecimal("100.00"), Currency.EUR);
+            donationService.addMoneyToTheCollectionBox(boxId, new BigDecimal("100.00"), "EUR");
         }).isInstanceOf(CollectionBoxNotFoundException.class).hasMessageContaining("Collection box with ID: 2, not found.");
         verifyNoInteractions(donationRepository);
     }

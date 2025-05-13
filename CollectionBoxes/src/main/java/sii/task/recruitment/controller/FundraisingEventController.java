@@ -32,7 +32,7 @@ public class FundraisingEventController {
     public ResponseEntity<List<FundraisingEventResponse>> getAllFundraisingEvents() {
         List<FundraisingEventResponse> responses = fundraisingEventService.getAllFundraisingEvents().stream()
                 .map(fundraisingEventService::toDto)
-                .collect(Collectors.toList());
+                .toList();
         return ResponseEntity.ok(responses);
     }
 

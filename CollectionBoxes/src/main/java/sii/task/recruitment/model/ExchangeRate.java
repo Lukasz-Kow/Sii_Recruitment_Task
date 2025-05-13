@@ -1,7 +1,8 @@
 package sii.task.recruitment.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -18,14 +19,12 @@ public class ExchangeRate {
     private Long id;
 
     @NotNull(message = "Source currency must be provided.")
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Currency sourceCurrency;
+    private String sourceCurrency;
 
     @NotNull(message = "Target currency must be provided.")
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Currency targetCurrency;
+    private String targetCurrency;
 
     @NotNull(message = "Exchange rate must be provided.")
     @DecimalMin(value = "0.0001", message = "Exchange rate must be greater than 0.0001.")

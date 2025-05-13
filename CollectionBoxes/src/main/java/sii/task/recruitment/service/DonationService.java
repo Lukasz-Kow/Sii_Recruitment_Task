@@ -22,7 +22,7 @@ public class DonationService {
     }
 
     @Transactional
-    public Donation addMoneyToTheCollectionBox(Long collectionBoxId, BigDecimal money, Currency currency) {
+    public Donation addMoneyToTheCollectionBox(Long collectionBoxId, BigDecimal money, String currency) {
         CollectionBox box = collectionBoxRepository.findById(collectionBoxId)
                 .orElseThrow(() -> new CollectionBoxNotFoundException(String.format("Collection box with ID: %d, not found.", collectionBoxId)));
 

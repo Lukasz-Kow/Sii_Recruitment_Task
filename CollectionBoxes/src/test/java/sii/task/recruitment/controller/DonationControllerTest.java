@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -29,7 +29,7 @@ class DonationControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @MockBean
+    @MockitoBean
     private DonationService donationService;
 
     @BeforeEach
@@ -39,7 +39,7 @@ class DonationControllerTest {
 
     @Test
     void shouldAddDonation() throws Exception {
-        AddDonation request = new AddDonation(1L, new BigDecimal("50.00"), Currency.USD);
+        AddDonation request = new AddDonation(1L, new BigDecimal("50.00"), "USD");
 
         CollectionBox collectionBox = new CollectionBox();
         collectionBox.setId(1L);
@@ -66,7 +66,8 @@ class DonationControllerTest {
 
     @Test
     void shouldThrowNotFoundWhenCollectionBoxNotFound() throws Exception {
-        when(donationService.addMoneyToTheCollectionBox(1L, new BigDecimal("50.00"), Currency.USD)).thenThrow(new CollectionBoxNotFoundException("Collection box with ID: 1, not found."));
+        when(donationService.addMoneyToTheCollectionBox(1L, new BigDecimal("50.00"), "USD"))
+                .thenThrow(new CollectionBoxNotFoundException("Collection box with ID: 1, not found."));
 
         mvc.perform(post("/api/donations")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -88,7 +89,7 @@ class DonationControllerTest {
 
     @Test
     void shouldReturnBadRequestWhenAmountIllegal() throws Exception {
-        when(donationService.addMoneyToTheCollectionBox(1L, new BigDecimal("0.00"), Currency.USD)).thenThrow(new IllegalAmountException("Amount must be greater than 0."));
+        when(donationService.addMoneyToTheCollectionBox(1L, new BigDecimal("0.00"), "USD")).thenThrow(new IllegalAmountException("Amount must be greater than 0."));
 
         mvc.perform(post("/api/donations")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -105,7 +106,7 @@ class DonationControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("Bad Request"))
                 .andExpect(jsonPath("$.status").value(400))
-        .andExpect(jsonPath("$.errors.currency").value("Invalid value for 'currency': 'INVALID'. Expected type: Currency"));
+                .andExpect(jsonPath("$.errors.currency").value("Currency must be a valid 3-letter ISO code."));
 
     }
 }

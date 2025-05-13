@@ -3,7 +3,6 @@ package sii.task.recruitment.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sii.task.recruitment.CurrencyConverter;
 import sii.task.recruitment.dto.CollectionBoxResponse;
 import sii.task.recruitment.exception.*;
 import sii.task.recruitment.model.*;
@@ -17,17 +16,17 @@ import java.util.List;
 public class CollectionBoxService {
     private final CollectionBoxRepository collectionBoxRepository;
     private final FundraisingEventRepository fundraisingEventRepository;
-    private final CurrencyConverter currencyConverter;
+    private final ExchangeRateService exchangeRateService;
     private final FundraisingEventService fundraisingEventService;
 
     @Autowired
     public CollectionBoxService(CollectionBoxRepository collectionBoxRepository,
                                 FundraisingEventRepository fundraisingEventRepository,
-                                CurrencyConverter currencyConverter,
+                                ExchangeRateService exchangeRateService,
                                 FundraisingEventService fundraisingEventService) {
         this.collectionBoxRepository = collectionBoxRepository;
         this.fundraisingEventRepository = fundraisingEventRepository;
-        this.currencyConverter = currencyConverter;
+        this.exchangeRateService = exchangeRateService;
         this.fundraisingEventService = fundraisingEventService;
     }
 
@@ -78,10 +77,10 @@ public class CollectionBoxService {
             throw new CollectionBoxNotAssignedException(String.format("Cannot transfer money, collection box with ID %d is not assigned to any event.", collectionBoxId));
         }
 
-        Currency targetCurrency = boxesEvent.getEventCurrency();
+        String targetCurrency = boxesEvent.getEventCurrency();
         BigDecimal totalMoney = box.getCollectedMoney().stream().map(donation -> donation.getCurrency().equals(targetCurrency)
                         ? donation.getAmount()
-                        : currencyConverter.convertCurrency(donation.getAmount(), donation.getCurrency(), targetCurrency))
+                        : exchangeRateService.convert(donation.getCurrency(), targetCurrency, donation.getAmount()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
 
