@@ -16,7 +16,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
-public class DonationServiceTest {
+class DonationServiceTest {
 
     @Mock
     private DonationRepository donationRepository;

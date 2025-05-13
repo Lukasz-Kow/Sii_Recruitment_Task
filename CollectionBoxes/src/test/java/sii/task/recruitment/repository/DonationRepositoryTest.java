@@ -20,7 +20,7 @@ class DonationRepositoryTest {
     private CollectionBoxRepository collectionBoxRepository;
 
     @Test
-    public void saveDonation() {
+    void saveDonation() {
         CollectionBox collectionBox = new CollectionBox();
         collectionBox.setIdentifier("Box-Test");
 
@@ -40,7 +40,7 @@ class DonationRepositoryTest {
     }
 
     @Test
-    public void findDonationById() {
+    void findDonationById() {
         CollectionBox collectionBox = new CollectionBox();
         collectionBox.setIdentifier("Box-Test2");
 

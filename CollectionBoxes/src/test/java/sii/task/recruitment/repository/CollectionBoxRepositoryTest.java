@@ -1,6 +1,6 @@
 package sii.task.recruitment.repository;
 
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -18,7 +18,7 @@ class CollectionBoxRepositoryTest {
     private CollectionBoxRepository collectionBoxRepository;
 
     @Test
-    public void testSaveCorrectCollectionBox() {
+    void testSaveCorrectCollectionBox() {
         CollectionBox collectionBox = new CollectionBox();
         collectionBox.setIdentifier("BOX-001");
 
@@ -30,7 +30,7 @@ class CollectionBoxRepositoryTest {
     }
 
     @Test
-    public void testUniqueIdentifier() {
+    void testUniqueIdentifier() {
         CollectionBox box1 = new CollectionBox();
         box1.setIdentifier("BOX-001");
 
@@ -44,7 +44,7 @@ class CollectionBoxRepositoryTest {
     }
 
     @Test
-    public void testExistsByIdentifier() {
+    void testExistsByIdentifier() {
         CollectionBox box1 = new CollectionBox();
         box1.setIdentifier("BOX-001");
         collectionBoxRepository.save(box1);
@@ -52,7 +52,7 @@ class CollectionBoxRepositoryTest {
     }
 
     @Test
-    public void testFindByIdentifier() {
+    void testFindByIdentifier() {
         CollectionBox box = new CollectionBox();
         box.setIdentifier("BOX-001");
         collectionBoxRepository.save(box);
@@ -64,7 +64,7 @@ class CollectionBoxRepositoryTest {
     }
 
     @Test
-    public void testDeleteCollectionBox() {
+    void testDeleteCollectionBox() {
         CollectionBox box = new CollectionBox();
         box.setIdentifier("BOX-001");
         collectionBoxRepository.save(box);

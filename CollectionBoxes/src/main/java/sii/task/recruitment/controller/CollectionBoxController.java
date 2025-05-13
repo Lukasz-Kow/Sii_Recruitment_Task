@@ -38,7 +38,7 @@ public class CollectionBoxController {
     }
 
     @DeleteMapping("/{identifier}")
-    public void unregisterCollectionBox(@RequestBody String identifier) {
+    public void unregisterCollectionBox(@PathVariable String identifier) {
         collectionBoxService.unregisterCollectionBox(identifier);
     }
 

@@ -3,7 +3,6 @@ package sii.task.recruitment.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import sii.task.recruitment.model.Currency;
 import sii.task.recruitment.model.ExchangeRate;
 
@@ -20,7 +19,7 @@ class ExchangeRateRepositoryTest {
     private ExchangeRateRepository exchangeRateRepository;
 
     @Test
-    public void testFindInitializedExchangeRateEURToUSD() {
+    void testFindInitializedExchangeRateEURToUSD() {
         exchangeRateRepository.save(new ExchangeRate(null, Currency.EUR, Currency.USD, new BigDecimal("1.072350")));
         Optional<ExchangeRate> rateOptional = exchangeRateRepository.findBySourceCurrencyAndTargetCurrency(Currency.EUR, Currency.USD);
 
@@ -29,7 +28,7 @@ class ExchangeRateRepositoryTest {
     }
 
     @Test
-    public void testFindInitializedExchangeRateEURToGBP() {
+    void testFindInitializedExchangeRateEURToGBP() {
         exchangeRateRepository.save(new ExchangeRate(null, Currency.EUR, Currency.GBP, new BigDecimal("0.857310")));
         Optional<ExchangeRate> rateOptional = exchangeRateRepository.findBySourceCurrencyAndTargetCurrency(Currency.EUR, Currency.GBP);
 
@@ -38,7 +37,7 @@ class ExchangeRateRepositoryTest {
     }
 
     @Test
-    public void testFindInitializedExchangeRateUSDToGBP() {
+    void testFindInitializedExchangeRateUSDToGBP() {
         exchangeRateRepository.save(new ExchangeRate(null, Currency.GBP, Currency.USD, new BigDecimal("1.250750")));
         Optional<ExchangeRate> rateOptional = exchangeRateRepository.findBySourceCurrencyAndTargetCurrency(Currency.GBP, Currency.USD);
 

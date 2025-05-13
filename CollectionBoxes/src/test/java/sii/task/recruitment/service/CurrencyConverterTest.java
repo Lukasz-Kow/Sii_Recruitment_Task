@@ -17,7 +17,7 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 
-public class CurrencyConverterTest {
+class CurrencyConverterTest {
 
     @Mock
     private ExchangeRateRepository exchangeRateRepository;

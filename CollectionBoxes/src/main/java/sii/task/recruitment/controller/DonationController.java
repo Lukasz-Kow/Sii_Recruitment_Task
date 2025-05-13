@@ -19,7 +19,7 @@ public class DonationController {
         this.donationService = donationService;
     }
 
-    @PostMapping("/{boxId}")
+    @PostMapping
     public ResponseEntity<Donation> addDonation(@Valid @RequestBody AddDonation request) {
         Donation donation = donationService.addMoneyToTheCollectionBox(request.collectionBoxId(), request.amount(), request.currency());
         return new ResponseEntity<>(donation, HttpStatus.CREATED);

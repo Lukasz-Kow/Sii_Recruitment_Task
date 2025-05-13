@@ -18,7 +18,7 @@ class FundraisingEventRepositoryTest {
     private FundraisingEventRepository fundraisingEventRepository;
 
     @Test
-    public void testSaveAndFindFundraisingEvent() {
+    void testSaveAndFindFundraisingEvent() {
         FundraisingEvent event = FundraisingEvent.builder()
                 .eventName("Event1")
                 .eventCurrency(Currency.EUR)
