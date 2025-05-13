@@ -1,6 +1,5 @@
 package sii.task.recruitment.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import sii.task.recruitment.model.Currency;
 
@@ -13,7 +12,7 @@ public record AddDonation(
         @NotNull(message = "Amount must be provided.")
         BigDecimal amount,
 
-        @NotBlank(message = "Currency must be provided.")
+        @NotNull(message = "Currency must be provided.")
         Currency currency) {
 
 }

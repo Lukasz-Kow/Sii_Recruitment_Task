@@ -17,12 +17,12 @@ public class ExchangeRate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Source currency must be provided.")
+    @NotNull(message = "Source currency must be provided.")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Currency sourceCurrency;
 
-    @NotBlank(message = "Target currency must be provided.")
+    @NotNull(message = "Target currency must be provided.")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Currency targetCurrency;

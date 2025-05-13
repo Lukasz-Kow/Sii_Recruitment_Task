@@ -53,7 +53,7 @@ public class CollectionBoxService {
         CollectionBox box = collectionBoxRepository.findById(collectionBoxId)
                 .orElseThrow(() -> new CollectionBoxNotFoundException(String.format("Collection box with ID: %d, not found.", collectionBoxId)));
         FundraisingEvent event = fundraisingEventRepository.findById(fundraisingEventId)
-                .orElseThrow(() -> new FundraisingEventNotFoundException(String.format("Fundraising event  with ID: %d, not found.", fundraisingEventId)));
+                .orElseThrow(() -> new FundraisingEventNotFoundException(String.format("Fundraising event with ID: %d, not found.", fundraisingEventId)));
 
         if (!box.getCollectedMoney().isEmpty()) {
             throw new CollectionBoxIsNotEmptyException("You can only assign empty collection boxes to a fundraising event.");
