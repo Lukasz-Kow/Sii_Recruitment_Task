@@ -1,5 +1,6 @@
 package sii.task.recruitment.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import sii.task.recruitment.dto.FinancialReportDto;
 import sii.task.recruitment.dto.FundraisingEventResponse;
 import sii.task.recruitment.model.Currency;
 import sii.task.recruitment.model.FundraisingEvent;
@@ -18,12 +20,14 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Slf4j
 @WebMvcTest(FundraisingEventController.class)
 class FundraisingEventControllerTest {
 
@@ -92,6 +96,27 @@ class FundraisingEventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.eventName").value("Event_1"))
                 .andExpect(jsonPath("$.eventCurrency").value("GBP"));
+    }
+
+    @Test
+    void shouldReturnFinancialReport() throws Exception {
+        List<FinancialReportDto> report = List.of(
+                new FinancialReportDto("Event_1", new BigDecimal("100.00"), Currency.USD),
+                new FinancialReportDto("Event_2", new BigDecimal("200.00"), Currency.GBP)
+        );
+
+        when(fundraisingEventService.generateFinancialReport()).thenReturn(report);
+        mvc.perform(get("/api/fundraising-events/report"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].eventName").value("Event_1"))
+                .andExpect(jsonPath("$[0].eventCurrency").value("USD"))
+                .andExpect(jsonPath("$[0].accountBalance").value(100.00))
+                .andExpect(jsonPath("$[1].eventName").value("Event_2"))
+                .andExpect(jsonPath("$[1].eventCurrency").value("GBP"))
+                .andExpect(jsonPath("$[1].accountBalance").value(200.00));
+
+        verify(fundraisingEventService).generateFinancialReport();
+
     }
 
     @Test

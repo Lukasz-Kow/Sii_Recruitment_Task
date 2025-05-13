@@ -55,7 +55,7 @@ class DonationControllerTest {
 
         when(donationService.addMoneyToTheCollectionBox(1L, request.amount(), request.currency())).thenReturn(donation);
 
-        mvc.perform(post("/api/donations/1")
+        mvc.perform(post("/api/donations")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"collectionBoxId\":\"1\",\"amount\":\"50.00\",\"currency\":\"USD\"}"))
                 .andExpect(status().isCreated())
@@ -68,7 +68,7 @@ class DonationControllerTest {
     void shouldThrowNotFoundWhenCollectionBoxNotFound() throws Exception {
         when(donationService.addMoneyToTheCollectionBox(1L, new BigDecimal("50.00"), Currency.USD)).thenThrow(new CollectionBoxNotFoundException("Collection box with ID: 1, not found."));
 
-        mvc.perform(post("/api/donations/1")
+        mvc.perform(post("/api/donations")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"collectionBoxId\":\"1\",\"amount\":\"50.00\",\"currency\":\"USD\"}"))
                 .andExpect(status().isNotFound())
@@ -79,7 +79,7 @@ class DonationControllerTest {
     void shouldThrowBadRequestWhenConversionFails() throws Exception {
         when(donationService.addMoneyToTheCollectionBox(anyLong(), any(), any())).thenThrow(new CurrencyConversionException("Amount and currency are required."));
 
-        mvc.perform(post("/api/donations/1").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post("/api/donations").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"collectionBoxId\":\"1\",\"amount\":\"50.00\",\"currency\":\"USD\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Amount and currency are required."));
@@ -90,7 +90,7 @@ class DonationControllerTest {
     void shouldReturnBadRequestWhenAmountIllegal() throws Exception {
         when(donationService.addMoneyToTheCollectionBox(1L, new BigDecimal("0.00"), Currency.USD)).thenThrow(new IllegalAmountException("Amount must be greater than 0."));
 
-        mvc.perform(post("/api/donations/1")
+        mvc.perform(post("/api/donations")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"collectionBoxId\":\"1\",\"amount\":\"0.00\",\"currency\":\"USD\"}"))
                 .andExpect(status().isBadRequest())
@@ -99,7 +99,7 @@ class DonationControllerTest {
 
     @Test
     void shouldReturnBadRequestWhenCurrencyEnumInvalid() throws Exception {
-        mvc.perform(post("/api/donations/1")
+        mvc.perform(post("/api/donations")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"collectionBoxId\":\"1\",\"amount\":\"50.00\", \"currency\":\"INVALID\"}"))
                 .andExpect(status().isBadRequest())

@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import sii.task.recruitment.dto.FinancialReportDto;
 import sii.task.recruitment.model.Currency;
 import sii.task.recruitment.model.FundraisingEvent;
 import sii.task.recruitment.repository.FundraisingEventRepository;
@@ -85,6 +86,19 @@ class FundraisingEventServiceTest {
 
         Assertions.assertThat(fundraisingEvent.getAccountBalance()).isEqualTo(new BigDecimal("200.00"));
         verify(fundraisingEventRepository).save(fundraisingEvent);
+    }
+
+    @Test
+    void shouldGenerateFinancialReport() {
+        List<FinancialReportDto> expectedFinancialReportDtos = List.of(
+                new FinancialReportDto("Event_1", new BigDecimal("100.00"), Currency.EUR));
+
+        when(fundraisingEventRepository.getFinancialReport()).thenReturn(expectedFinancialReportDtos);
+
+        List<FinancialReportDto> actual = fundraisingEventService.generateFinancialReport();
+
+        Assertions.assertThat(actual).isEqualTo(expectedFinancialReportDtos);
+        verify(fundraisingEventRepository).getFinancialReport();
     }
 
 

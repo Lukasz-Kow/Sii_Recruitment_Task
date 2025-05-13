@@ -4,6 +4,7 @@ package sii.task.recruitment.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sii.task.recruitment.dto.FinancialReportDto;
 import sii.task.recruitment.dto.FundraisingEventResponse;
 import sii.task.recruitment.model.Currency;
 import sii.task.recruitment.model.FundraisingEvent;
@@ -47,6 +48,10 @@ public class FundraisingEventService {
     public void addToBalance(FundraisingEvent event, BigDecimal amount) {
         event.setAccountBalance(event.getAccountBalance().add(amount));
         fundraisingEventRepository.save(event);
+    }
+
+    public List<FinancialReportDto> generateFinancialReport() {
+        return fundraisingEventRepository.getFinancialReport();
     }
 
     public FundraisingEventResponse toDto(FundraisingEvent fundraisingEvent) {

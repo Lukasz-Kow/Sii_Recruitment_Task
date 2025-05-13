@@ -42,5 +42,10 @@ public class FundraisingEventController {
                 .map(event -> ResponseEntity.ok(fundraisingEventService.toDto(event))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/report")
+    public ResponseEntity<List<FinancialReportDto>> getFinancialReport() {
+        return ResponseEntity.ok(fundraisingEventService.generateFinancialReport());
+    }
+
 
 }
