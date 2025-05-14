@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sii.task.recruitment.RestExchangeRatesProvider;
+import sii.task.recruitment.client.RestExchangeRatesProvider;
 import sii.task.recruitment.dto.ExchangeRateResponse;
 import sii.task.recruitment.exception.CurrencyConversionException;
 

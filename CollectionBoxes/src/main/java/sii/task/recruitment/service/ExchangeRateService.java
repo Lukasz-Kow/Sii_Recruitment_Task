@@ -2,10 +2,9 @@ package sii.task.recruitment.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sii.task.recruitment.RestExchangeRatesProvider;
+import sii.task.recruitment.client.RestExchangeRatesProvider;
 import sii.task.recruitment.dto.ExchangeRateResponse;
 import sii.task.recruitment.exception.CurrencyConversionException;
-//import sii.task.recruitment.model.Currency;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

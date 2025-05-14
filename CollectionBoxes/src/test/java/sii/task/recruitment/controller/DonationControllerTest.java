@@ -99,14 +99,14 @@ class DonationControllerTest {
     }
 
     @Test
-    void shouldReturnBadRequestWhenCurrencyEnumInvalid() throws Exception {
+    void shouldReturnBadRequestWhenCurrencyInvalid() throws Exception {
         mvc.perform(post("/api/donations")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"collectionBoxId\":\"1\",\"amount\":\"50.00\", \"currency\":\"INVALID\"}"))
+                        .content("{\"collectionBoxId\":\"1\",\"amount\":\"50.00\", \"currency\":\"INV\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("Bad Request"))
                 .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.errors.currency").value("Currency must be a valid 3-letter ISO code."));
+                .andExpect(jsonPath("$.errors.currency").value("Currency code is not valid ISO currency."));
 
     }
 }

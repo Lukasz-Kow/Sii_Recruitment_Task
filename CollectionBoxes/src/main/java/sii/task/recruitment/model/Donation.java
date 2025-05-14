@@ -2,7 +2,7 @@ package sii.task.recruitment.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -20,6 +20,8 @@ public class Donation {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank(message = "Currency must be provided.")
+    @Pattern(regexp = "^[A-Z]{3}$", message = "Currency must be valid 3 letter ISO code.")
     private String currency;
 
     @ManyToOne

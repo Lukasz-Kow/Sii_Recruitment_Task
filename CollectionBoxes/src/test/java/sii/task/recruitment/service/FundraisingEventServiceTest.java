@@ -3,7 +3,9 @@ package sii.task.recruitment.service;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sii.task.recruitment.dto.FinancialReportDto;
 import sii.task.recruitment.model.FundraisingEvent;
 import sii.task.recruitment.repository.FundraisingEventRepository;
@@ -15,17 +17,17 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class FundraisingEventServiceTest {
 
     @Mock
     private FundraisingEventRepository fundraisingEventRepository;
 
-    @InjectMocks
     private FundraisingEventService fundraisingEventService;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        fundraisingEventService = new FundraisingEventService(fundraisingEventRepository);
     }
 
     @Test

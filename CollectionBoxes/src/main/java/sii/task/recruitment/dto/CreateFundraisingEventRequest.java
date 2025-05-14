@@ -1,8 +1,7 @@
 package sii.task.recruitment.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-//import sii.task.recruitment.model.Currency;
+import sii.task.recruitment.validator.ValidCurrency;
 
 public record CreateFundraisingEventRequest(
 
@@ -10,6 +9,7 @@ public record CreateFundraisingEventRequest(
         String eventName,
 
         @NotBlank(message = "Currency must be specified.")
+        @ValidCurrency
         String currency
 ) {
 }

@@ -1,9 +1,8 @@
-package sii.task.recruitment;
+package sii.task.recruitment.client;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import sii.task.recruitment.dto.ExchangeRateResponse;
-//import sii.task.recruitment.model.Currency;
 
 @Component
 public class RestExchangeRatesProvider {

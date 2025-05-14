@@ -1,15 +1,14 @@
 package sii.task.recruitment.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sii.task.recruitment.dto.CollectionBoxResponse;
 import sii.task.recruitment.exception.*;
 import sii.task.recruitment.model.*;
-
 import sii.task.recruitment.repository.CollectionBoxRepository;
 import sii.task.recruitment.repository.FundraisingEventRepository;
 
@@ -35,9 +34,17 @@ class CollectionBoxServiceTest {
     @Mock
     private FundraisingEventService fundraisingEventService;
 
-    @InjectMocks
     private CollectionBoxService collectionBoxService;
 
+    @BeforeEach
+    void setUp() {
+        collectionBoxService = new CollectionBoxService(
+                collectionBoxRepository,
+                fundraisingEventRepository,
+                exchangeRateService,
+                fundraisingEventService
+        );
+    }
 
     @Test
     void shouldRegisterNewCollectionBox() {

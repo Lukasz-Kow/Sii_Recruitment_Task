@@ -10,7 +10,6 @@ import sii.task.recruitment.model.FundraisingEvent;
 import sii.task.recruitment.service.FundraisingEventService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/fundraising-events")
