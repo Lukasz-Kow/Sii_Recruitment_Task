@@ -181,19 +181,19 @@ Sample body:
 
 **Unregister a collection box**
 
-`DELETE /api/collection-boxes/Box-001`
+`DELETE /api/collection-boxes/{identifier}`
 
   
 
 **Assign a box to a fundraising event**
 
-`PUT /api/collection-boxes/1/assign/1`
+`PUT /api/collection-boxes/{boxId}/assign/{eventId}`
 
   
 
 **Transfer collected money to event**
 
-`POST /api/collection-boxes/1/transfer`
+`POST /api/collection-boxes/{boxId}/transfer`
 
   
 
